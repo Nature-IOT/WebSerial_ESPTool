@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <title>Beyou Flash Utility</title>
+    <title>Flash Utility</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,11 +49,11 @@
         <div class="firmware-selector">
           <h2>Sélectionner un firmware</h2>
           <select id="firmware-picker">
-            <option value="sfa" selected>SFA Production</option>
-            <option value="cyd">CYD Développement</option>
+            <option value="read" selected>Lecture</option>
+            <option value="15m">Mesure 15 min</option>
           </select>
           <div id="firmware-info" style="margin-top: 20px;">
-            <p id="firmware-description">Firmware sélectionné : <strong>SFA Production</strong> (Version : 1.X)</p>
+            <p id="firmware-description">Firmware sélectionné : <strong>PresTemp</strong> (Version : 1.X)</p>
           </div>
         </div>
 
@@ -75,26 +75,26 @@
 
     <script>
       window.firmwareManifests = {
-        "sfa": {
-          name: "SFA Production",
-          version: "1.9.0",
+        "read": {
+          name: "Lecture",
+          version: "1.0",
           home_assistant_domain: null,
           new_install_prompt_erase: true,
           builds: [
             {
-              chipFamily: "ESP32-S3",
+              chipFamily: "ESP32,
               improv: false,
               parts: [
-                { path: "firmwares/sfa/bootloader.bin", offset: 0x0 },
-                { path: "firmwares/sfa/partitions.bin", offset: 0x8000 },
-                { path: "firmwares/sfa/firmware.bin", offset: 0x10000 }
+                { path: "firmwares/read/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/read/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/read/firmware.bin", offset: 0x10000 }
               ]
             }
           ]
         },
-        "cyd": {
-          name: "CYD Développement",
-          version: "1.0.0",
+        "15m": {
+          name: "Mesure 15min ",
+          version: "1.0",
           home_assistant_domain: null,
           new_install_prompt_erase: true,
           builds: [
@@ -102,9 +102,9 @@
               chipFamily: "ESP32",
               improv: false,
               parts: [
-                { path: "firmwares/cyd/bootloader.bin", offset: 0x1000 },
-                { path: "firmwares/cyd/partitions.bin", offset: 0x8000 },
-                { path: "firmwares/cyd/firmware.bin", offset: 0x10000 }
+                { path: "firmwares/15m/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/15m/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/15m/firmware.bin", offset: 0x10000 }
               ]
             }
           ]
