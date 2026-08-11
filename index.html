@@ -85,13 +85,14 @@
               chipFamily: "ESP32",
               improv: false,
               parts: [
-                { path: "firmwares/read/bootloader.bin", offset: 0x1000 },
-                { path: "firmwares/read/partitions.bin", offset: 0x8000 },
-                { path: "firmwares/read/firmware.bin", offset: 0x10000 }
+                { path: "firmwares/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/read.bin", offset: 0x10000 }
               ]
             }
           ]
         },
+        
         "15m": {
           name: "Mesure 15min ",
           version: "1.0",
@@ -102,13 +103,51 @@
               chipFamily: "ESP32",
               improv: false,
               parts: [
-                { path: "firmwares/15m/bootloader.bin", offset: 0x1000 },
-                { path: "firmwares/15m/partitions.bin", offset: 0x8000 },
-                { path: "firmwares/15m/firmware.bin", offset: 0x10000 }
+                { path: "firmwares/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/15min.bin", offset: 0x10000 }
+              ]
+            }
+          ]
+        },
+
+          "30m": {
+          name: "Mesure 30min ",
+          version: "1.0",
+          home_assistant_domain: null,
+          new_install_prompt_erase: true,
+          builds: [
+            {
+              chipFamily: "ESP32",
+              improv: false,
+              parts: [
+                { path: "firmwares/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/30min.bin", offset: 0x10000 }
+              ]
+            }
+          ]
+        },
+
+          "60m": {
+          name: "Mesure 60min ",
+          version: "1.0",
+          home_assistant_domain: null,
+          new_install_prompt_erase: true,
+          builds: [
+            {
+              chipFamily: "ESP32",
+              improv: false,
+              parts: [
+                { path: "firmwares/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/1min.bin", offset: 0x10000 }
               ]
             }
           ]
         }
+
+        
       };
 
       document.getElementById('firmware-picker').addEventListener('change', function() {
