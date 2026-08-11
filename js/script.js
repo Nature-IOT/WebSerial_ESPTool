@@ -1,4 +1,4 @@
-console.log('Script chargé - ESPTool-JS v0.5.6 (avec gestion améliorée du reset)');
+console.log('Script chargé - ESPTool-JS v0.5.6');
 
 document.addEventListener('DOMContentLoaded', function() {
   let port = null;
@@ -207,12 +207,12 @@ if (programButton) {
       };
       await esploader.writeFlash(flashOptions);
       log('PROGRAMMATION TERMINÉE !', 'success');
-      log('Reset de l\'ESP32...');
+      log('Reset du capteur...');
       // Reset géré nativement par esptool-js
       try {
         await esploader.after("hard_reset");
         await new Promise(resolve => setTimeout(resolve, 1000));
-        log('ESP32 redémarré avec le nouveau firmware', 'success');
+        log('Capteur redémarré avec le nouveau firmware', 'success');
       } catch (error) {
         log(`Erreur lors du reset: ${error.message}`, 'error');
         if (port) {
@@ -226,7 +226,7 @@ if (programButton) {
           }
         }
       }
-      log('Vous pouvez débrancher l\'ESP32', 'success');
+      log('Vous pouvez débrancher le capteur', 'success');
     } catch (error) {
       log('ERREUR DE PROGRAMMATION', 'error');
       log(`Erreur: ${error.message}`, 'error');
@@ -242,10 +242,10 @@ if (programButton) {
   if (eraseButton) {
     eraseButton.addEventListener('click', async function() {
       if (!isConnected || !esploader) {
-        log('Erreur: Connectez-vous d\'abord à l\'ESP32', 'error');
+        log('Erreur: Connectez-vous d\'abord à le capteur', 'error');
         return;
       }
-      const confirmed = confirm('⚠️ ATTENTION ⚠️\n\nVoulez-vous vraiment effacer TOUTE la mémoire flash de l\'ESP32 ?\n\nCette action est IRRÉVERSIBLE !');
+      const confirmed = confirm('⚠️ ATTENTION ⚠️\n\nVoulez-vous vraiment effacer TOUTE la mémoire flash ?\n\nCette action est IRRÉVERSIBLE !');
       if (!confirmed) {
         log('Effacement annulé');
         return;
@@ -255,10 +255,10 @@ if (programButton) {
       connectButton.disabled = true;
       try {
         log('🗑️  EFFACEMENT DE LA FLASH');
-        log('NE DÉBRANCHEZ PAS L\'ESP32 !', 'warning');
+        log('NE DÉBRANCHEZ PAS LE CAPTEUR !', 'warning');
         await esploader.eraseFlash();
         log('FLASH EFFACÉE AVEC SUCCÈS !', 'success');
-        log('L\'ESP32 est maintenant vierge');
+        log('Le capteur est maintenant vierge');
       } catch (error) {
         log('ERREUR D\'EFFACEMENT', 'error');
         log(`Erreur: ${error.message}`, 'error');
