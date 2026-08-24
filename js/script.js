@@ -1,4 +1,4 @@
-console.log('Script chargé - ESPTool-JS v0.5.7');
+console.log('Script chargé - ESPTool-JS v0.6.1');
 
 document.addEventListener('DOMContentLoaded', function() {
   let port = null;
@@ -182,12 +182,10 @@ if (programButton) {
         log(`[${i + 1}/${parts.length}] Préparation de ${part.path}...`);
         const data = await loadBinaryFile(part.path);
         if (!(data instanceof Uint8Array)) throw new Error(`Format de données invalide pour ${part.path}`);
-        // esptool-js@0.5.6 (version épinglée dans index.html) attend une
-        // chaîne binaire dans fileArray[].data — writeFlash() appelle en
-        // interne bstrToUi8() dessus. Ne pas passer un Uint8Array brut ici.
-        let binaryString = '';
-        for (let j = 0; j < data.length; j++) binaryString += String.fromCharCode(data[j]);
-        fileArray.push({ data: binaryString, address: part.offset });
+        // esptool-js >= 0.6.0 attend directement un Uint8Array dans
+        // fileArray[].data (changement d'API depuis la 0.5.x qui attendait
+        // une chaîne binaire). Ne pas convertir avec String.fromCharCode ici.
+        fileArray.push({ data: data, address: part.offset });
       }
       log('Tous les fichiers sont chargés ✓', 'success');
       log('📝 Écriture de la flash...');
@@ -205,10 +203,11 @@ if (programButton) {
           log(`[${fileIndex + 1}/${parts.length}] ${fileName} - ${percent}%`, 'progress');
         },
         calculateMD5Hash: (image) => {
-          // Sur esptool-js@0.5.6, "image" ici est une chaîne binaire (bstr),
-          // pas un Uint8Array : Latin1.parse est le bon choix.
-          const wordArray = CryptoJS.enc.Latin1.parse(image);
-          return CryptoJS.MD5(wordArray);
+          // esptool-js >= 0.6.0 : "image" est un Uint8Array, plus une chaîne
+          // binaire. On construit le WordArray CryptoJS directement depuis
+          // les octets plutôt que via enc.Latin1.parse (qui attend une string).
+          const wordArray = CryptoJS.lib.WordArray.create(image);
+          return CryptoJS.MD5(wordArray).toString();
         }
       };
       await esploader.writeFlash(flashOptions);
@@ -277,5 +276,5 @@ if (programButton) {
     });
   }
 
-  log('Connectez votre carte - 0.5.7');
+  log('Connectez votre carte - 0.6.1');
 });
