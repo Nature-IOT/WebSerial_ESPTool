@@ -50,6 +50,7 @@
           <h2>Sélectionner un firmware</h2>
           <select id="firmware-picker">
             <option value="read" selected>Lecture</option>
+            <option value="1m">Mesure 1 min</option>
             <option value="15m">Mesure 15 min</option>
             <option value="30m">Mesure 30 min</option>
             <option value="60m">Mesure 60 min</option>
@@ -91,6 +92,25 @@
                 { path: "firmwares/bootloader.bin", offset: 0x1000 },
                 { path: "firmwares/partitions.bin", offset: 0x8000 },
                 { path: "firmwares/read.bin", offset: 0x10000 }
+              ]
+            }
+          ]
+        },
+
+
+        "1m": {
+          name: "Mesure 1min ",
+          version: "1.0",
+          home_assistant_domain: null,
+          new_install_prompt_erase: true,
+          builds: [
+            {
+              chipFamily: "ESP32",
+              improv: false,
+              parts: [
+                { path: "firmwares/bootloader.bin", offset: 0x1000 },
+                { path: "firmwares/partitions.bin", offset: 0x8000 },
+                { path: "firmwares/1min.bin", offset: 0x10000 }
               ]
             }
           ]
@@ -144,7 +164,7 @@
               parts: [
                 { path: "firmwares/bootloader.bin", offset: 0x1000 },
                 { path: "firmwares/partitions.bin", offset: 0x8000 },
-                { path: "firmwares/1min.bin", offset: 0x10000 }
+                { path: "firmwares/60min.bin", offset: 0x10000 }
               ]
             }
           ]
