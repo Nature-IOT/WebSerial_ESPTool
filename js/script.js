@@ -1,4 +1,4 @@
-console.log('Script chargé - ESPTool-JS v0.5.6');
+console.log('Script chargé - ESPTool-JS v0.5.7');
 
 document.addEventListener('DOMContentLoaded', function() {
   let port = null;
@@ -130,8 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
           log('Déconnexion...');
           if (esploader) {
-            // Ajout d'un délai avant le reset
-            await esploader.hardReset();
+            // FIX: ESPLoader n'expose pas de méthode hardReset().
+            // Le reset se fait via after("hard_reset"), comme après le flash.
+            await esploader.after("hard_reset");
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
           if (transport) await transport.disconnect();
@@ -181,6 +182,9 @@ if (programButton) {
         log(`[${i + 1}/${parts.length}] Préparation de ${part.path}...`);
         const data = await loadBinaryFile(part.path);
         if (!(data instanceof Uint8Array)) throw new Error(`Format de données invalide pour ${part.path}`);
+        // esptool-js@0.5.6 (version épinglée dans index.html) attend une
+        // chaîne binaire dans fileArray[].data — writeFlash() appelle en
+        // interne bstrToUi8() dessus. Ne pas passer un Uint8Array brut ici.
         let binaryString = '';
         for (let j = 0; j < data.length; j++) binaryString += String.fromCharCode(data[j]);
         fileArray.push({ data: binaryString, address: part.offset });
@@ -201,6 +205,8 @@ if (programButton) {
           log(`[${fileIndex + 1}/${parts.length}] ${fileName} - ${percent}%`, 'progress');
         },
         calculateMD5Hash: (image) => {
+          // Sur esptool-js@0.5.6, "image" ici est une chaîne binaire (bstr),
+          // pas un Uint8Array : Latin1.parse est le bon choix.
           const wordArray = CryptoJS.enc.Latin1.parse(image);
           return CryptoJS.MD5(wordArray);
         }
@@ -242,7 +248,7 @@ if (programButton) {
   if (eraseButton) {
     eraseButton.addEventListener('click', async function() {
       if (!isConnected || !esploader) {
-        log('Erreur: Connectez-vous d\'abord à le capteur', 'error');
+        log('Erreur: Connectez-vous d\'abord au capteur', 'error');
         return;
       }
       const confirmed = confirm('⚠️ ATTENTION ⚠️\n\nVoulez-vous vraiment effacer TOUTE la mémoire flash ?\n\nCette action est IRRÉVERSIBLE !');
@@ -271,5 +277,5 @@ if (programButton) {
     });
   }
 
-  log('Connectez votre carte - 0.5.6');
+  log('Connectez votre carte - 0.5.7');
 });
