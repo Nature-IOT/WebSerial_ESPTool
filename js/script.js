@@ -95,6 +95,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // FIX: esploader.after("hard_reset") ne fait qu'un setRTS(false). Si RTS
+  // est déjà à false (c'est le cas juste après la connexion), cet appel ne
+  // produit aucune transition électrique sur la broche EN, donc aucun reset
+  // matériel réel sur les cartes à circuit auto-reset classique (RTS/DTR,
+  // ex: CP2102/CH340). On force ici une vraie impulsion RTS true -> false.
+  async function hardResetClassic(transportInstance) {
+    if (!transportInstance) return;
+    await transportInstance.setRTS(true);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await transportInstance.setRTS(false);
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
   if (connectButton) {
     connectButton.addEventListener('click', async function() {
       if (!isConnected) {
@@ -130,9 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
           log('Déconnexion...');
           if (esploader) {
-            // FIX: ESPLoader n'expose pas de méthode hardReset().
-            // Le reset se fait via after("hard_reset"), comme après le flash.
-            await esploader.after("hard_reset");
+            // FIX: after("hard_reset") ne suffit pas sur cette carte (voir
+            // hardResetClassic ci-dessus).
+            await hardResetClassic(transport);
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
           if (transport) await transport.disconnect();
@@ -215,16 +228,15 @@ if (programButton) {
       log('Reset du capteur...');
       // Reset géré nativement par esptool-js
       try {
-        await esploader.after("hard_reset");
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await hardResetClassic(transport);
         log('Capteur redémarré avec le nouveau firmware', 'success');
       } catch (error) {
         log(`Erreur lors du reset: ${error.message}`, 'error');
         if (port) {
           try {
-            await port.setSignals({ dataTerminalReady: false, requestToSend: false });
+            await port.setSignals({ dataTerminalReady: false, requestToSend: true });
             await new Promise(resolve => setTimeout(resolve, 100));
-            await port.setSignals({ dataTerminalReady: true, requestToSend: true });
+            await port.setSignals({ dataTerminalReady: false, requestToSend: false });
             log('Reset manuel effectué', 'warning');
           } catch (e) {
             log(`Erreur lors du reset manuel: ${e.message}`, 'error');
