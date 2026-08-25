@@ -1,594 +1,317 @@
-/**
- * Header
- */
+:root {
+  --bg: #f4f6f9;
+  --panel: #ffffff;
+  --panel-2: #eef1f5;
+  --border: #dde3ea;
+  --text: #1a2430;
+  --muted: #6b7a8c;
+  --accent: #0f8a7c;
+  --accent-soft: #e3f5f2;
+  --warn: #b45309;
+  --warn-soft: #fdf1de;
+  --danger: #b91c1c;
+  --danger-soft: #fbe6e5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+p { margin: 0; }
+
+input, select, button, label {
+  font-weight: 500;
+  outline: none;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+div.left { float: left; display: flex; align-items: center; }
+div.right { float: right; display: flex; align-items: center; }
+div.clear { clear: both; }
+
+/* =========================================================
+   Header
+   ========================================================= */
 
 .header {
   box-sizing: border-box;
   font-size: 16px;
   height: 85px;
   line-height: 40px;
-  padding: 20px 70px 0px 70px; /* TRouBLe */
+  padding: 20px 70px 0 70px;
   position: fixed;
   width: 100%;
   z-index: 1000;
   margin: 0;
-  border-bottom: 5px solid #00a7e9;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 2px rgba(20, 30, 45, 0.04);
 }
 
-.header h1 {
-  flex: 1;
-  font-size: 20px;
-  font-weight: 400;
+.header .Logo {
+  height: 34px;
+  width: auto;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 4px;
+  background: var(--accent-soft);
 }
 
-.header button {
-  border: solid 2px #fff;
-  background-color: #000;
+.header select#baudRate {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  height: auto;
+}
+
+.header button#butConnect {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  border: none;
+  background: var(--accent);
   color: #fff;
-  margin-left: 20px;
-  height: 30px;
+  margin-left: 15px;
+  height: auto;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.header button#butConnect:hover { background: #0b6f63; }
+.header button#butConnect:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.header button:hover {
-  background-color: #fff;
-  color: #000;
-}
+/* =========================================================
+   Main / layout
+   ========================================================= */
 
-button,
-.firmware {
-  height: 25px;
-  font-size: 16px;
-  border-radius: 15px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-width: 2px;
-}
-
-body {
-  font-family: proxima-nova, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  margin: 0;
-}
-
-p {
-  margin: 0;
-}
-
-input,
-select,
-button,
-label {
-  font-weight: 600;
-  outline: none;
-}
-
-div.left {
-  float: left;
-  display: flex;
-  align-items: center;
-}
-
-div.right {
-  float: right;
-  display: flex;
-  align-items: center;
-}
-
-div.clear {
-  clear: both;
-}
-
-.main {
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-top: 80px;
-}
-
-.hidden {
-  display: none;
-}
+.main { overflow-x: hidden; overflow-y: auto; padding-top: 100px; }
+.hidden { display: none; }
 
 .notSupported {
-  padding: 1em;
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin: 0 70px 1.25em;
+  padding: 1em 1.25em;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
 }
+.notSupported b { color: var(--danger); }
 
 .subheader {
-  height: 100px;
-  line-height: 100px;
-  padding-left: 70px;
-  padding-right: 70px;
+  height: auto;
+  line-height: 1.2;
+  padding: 1.5rem 70px 0.5rem;
 }
-
 .subheader .title {
-  font-size: 36px;
-  font-weight: 500;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
 }
 
-#app.connected #commands {
-  height: 200px;
-}
-
-#app.connected #log {
-  height: calc(100vh - 530px);
-}
-
-#app #commands {
-  height: 0;
-}
-
-#app #log {
-  height: calc(100vh - 330px);
-}
-
-#commands,
-#log {
-  transition: height 0.5s;
-}
-
-#commands {
-  position: relative;
-  margin: 0 auto;
-  overflow-y: auto;
-  padding: 0 60px;
-}
-
-#log {
-  max-width: 100%;
-  font-family: pt-mono, monospace;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  overflow-x: hidden;
-  overflow-x: auto;
-  transition: color 0.1s linear;
-  padding: 0 50px;
-  border: 20px solid #000;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  background-color: #000;
-  color: #cecece;
-}
-
-#log::-webkit-scrollbar {
-  display: none;
-}
-
-.footer {
-  padding-left: 70px;
-  padding-right: 70px;
-}
-
-.footer a {
-  color: blue;
-}
-
-.footer .controls {
-  line-height: 45px;
-}
-
-.footer button {
-  font-size: 14px;
-  margin: 0 10px;
-}
-
-.remix {
-  display: flex;
-  justify-content: center;
-  height: 60px;
-  position: relative;
-}
-
-.remix button {
-  position: absolute;
-  bottom: 11px;
-}
-
-#templates {
-  display: none;
-}
-
-/* On/Off Switch Widget */
-.onoffswitch {
-  display: inline-block;
-  position: relative;
-  width: 50px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  margin-left: 10px;
-}
-
-.onoffswitch-checkbox {
-  display: none;
-}
-
-.onoffswitch-label {
-  display: block;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #900;
-  border-radius: 15px;
-  transition: border 0.3s ease-in 0s;
-}
-
-.onoffswitch-inner {
-  display: block;
-  width: 200%;
-  margin-left: -100%;
-  transition: margin 0.3s ease-in 0s;
-}
-
-.onoffswitch-inner:before,
-.onoffswitch-inner:after {
-  display: block;
-  float: left;
-  width: 50%;
-  height: 25px;
-  padding: 0;
-  line-height: 25px;
-  font-size: 14px;
-  color: white;
-  font-family: proxima-nova, sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  box-sizing: border-box;
-}
-
-.onoffswitch-inner:before {
-  content: "on";
-  padding-left: 6px;
-  background-color: #8ec641;
-  color: #fff;
-}
-
-.onoffswitch-inner:after {
-  content: "off";
-  padding-right: 6px;
-  background-color: #c64141;
-  color: #fff;
-  text-align: right;
-}
-
-.onoffswitch-switch {
-  display: block;
-  width: 19px;
-  margin: 3px;
-  background: #fff;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 23px;
-  border: 1px solid #900;
-  border-radius: 15px;
-  transition: all 0.3s ease-in 0s;
-}
-
-.onoffswitch-checkbox:checked + .onoffswitch-label {
-  border-color: #71ae1e;
-}
-
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-  margin-left: 0;
-}
-
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-  right: 0px;
-  border-color: #67ac38;
-}
-
-.footer .onoffswitch {
-  margin-right: 20px;
-  top: 7px;
-}
-
-#butClear {
-  margin-top: 10px;
-}
-
-#commands {
-  min-width: 600px;
-  justify-content: center;
-  position: relative;
-  align-items: center;
-}
-
-#commands .upload {
-  width: 600px;
-  display: flex;
-  align-items: center;
-  margin: 5px auto;
-  justify-content: center;
-}
-
-#commands .upload .offset {
-  width: 50px;
-}
-
-#commands .upload label {
-  white-space: nowrap;
-}
-
-.firmware > input {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.firmware {
-  border-style: solid;
-  margin-left: 20px;
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.firmware > svg {
-  margin-right: 10px;
-}
-
-.debug-function {
-  color: #8ec641;
-}
-
-.error-message {
-  color: #c64141;
-}
-
-.timestamp {
-  color: #8ec641;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 24px;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 10px;
-  padding: 0;
-  overflow: hidden;
-}
-
-.progress-bar > div {
-  height: 24px;
-  background-color: #71ae1e;
-  width: 0;
-}
-
-#commands .buttons {
-  display: flex;
-  justify-content: center;
-  width: 600px;
-  margin: 10px auto;
-}
-
-#commands .buttons button {
-  margin-left: 10px;
-  margin-right: 10px;
-  border-width: 2px;
-  border-style: solid;
-}
-
-.justify {
-  display: flex;
-  justify-content: space-between;
-}
-
-.center {
-  text-align: center;
-}
-
-/**
- * Nouveaux styles pour la section firmware personnalisé
- */
-
-/* Section principale de contenu */
 .content {
-  padding: 20px 70px;
+  padding: 20px 70px 60px;
   max-width: 100%;
   margin: 0 auto;
 }
 
-/* Section de sélection du firmware */
-.firmware-selector {
-  background-color: #f5f5f5;
-  padding: 30px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  border: 2px solid #00a7e9;
+/* =========================================================
+   Panels (firmware-selector / console-output)
+   ========================================================= */
+
+.firmware-selector,
+.console-output {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(20, 30, 45, 0.04);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.75rem;
 }
 
-.firmware-selector h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #000;
-  font-size: 24px;
+.firmware-selector h2,
+.console-output h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1rem;
   font-weight: 500;
 }
 
-/* Sélecteur de firmware stylisé */
 #firmware-picker {
   width: 100%;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  border: 2px solid #000;
-  border-radius: 15px;
-  background-color: #fff;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: proxima-nova, sans-serif;
+  transition: border-color 0.15s;
 }
-
-#firmware-picker:hover {
-  border-color: #00a7e9;
-}
-
+#firmware-picker:hover { border-color: var(--accent); }
 #firmware-picker:focus {
-  border-color: #00a7e9;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 167, 233, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* Information sur le firmware sélectionné */
 #firmware-info {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #e7f3ff;
-  border-left: 4px solid #00a7e9;
-  border-radius: 5px;
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
 }
-
 #firmware-info p {
   line-height: 1.6;
-  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
 }
-
-#firmware-description {
-  color: #000;
-}
-
 #firmware-description strong {
   display: block;
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #00a7e9;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* Section des boutons de programmation */
+.brand-sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.75rem;
+}
+.brand-sub a { color: var(--accent); text-decoration: none; }
+.brand-sub a:hover { text-decoration: underline; }
+
+/* =========================================================
+   Boutons Programmer / Effacer
+   ========================================================= */
+
 .program-section {
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
   justify-content: center;
 }
 
 .program-section button {
   flex: 1;
   max-width: 250px;
-  padding: 15px 30px;
-  font-size: 18px;
-  font-weight: 600;
-  border: 2px solid;
-  border-radius: 15px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: proxima-nova, sans-serif;
+  transition: all 0.15s;
 }
 
-#programButton {
-  background-color: #8ec641;
-  border-color: #71ae1e;
-  color: #fff;
-}
-
-#programButton:hover:not(:disabled) {
-  background-color: #71ae1e;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#programButton:disabled {
-  background-color: #ccc;
-  border-color: #999;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
+#programButton { background: var(--accent); color: #fff; }
+#programButton:hover:not(:disabled) { background: #0b6f63; }
+#programButton:disabled { background: var(--accent); opacity: 0.5; cursor: not-allowed; }
 
 #eraseButton {
-  background-color: #c64141;
-  border-color: #900;
-  color: #fff;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--danger);
 }
-
-#eraseButton:hover:not(:disabled) {
-  background-color: #900;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
+#eraseButton:hover:not(:disabled) { background: #f6cfcd; }
 #eraseButton:disabled {
-  background-color: #ccc;
-  border-color: #999;
+  background: var(--danger-soft);
+  opacity: 0.4;
   cursor: not-allowed;
-  opacity: 0.6;
+  border: 1px solid var(--danger);
 }
 
-/* Section de sortie console */
-.console-output {
-  background-color: #f5f5f5;
-  padding: 30px;
-  border-radius: 10px;
-  border: 2px solid #00a7e9;
-}
-
-.console-output h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #000;
-  font-size: 20px;
-  font-weight: 500;
-}
+/* =========================================================
+   Console de log
+   ========================================================= */
 
 .console {
-  background-color: #1e1e1e;
-  color: #d4d4d4;
-  padding: 20px;
-  border-radius: 5px;
-  font-family: pt-mono, monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  height: 300px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 0.9rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  height: 260px;
   overflow-y: auto;
   overflow-x: auto;
   white-space: pre-wrap;
   word-wrap: break-word;
-  border: 2px solid #000;
+}
+.console::-webkit-scrollbar { width: 8px; height: 8px; }
+.console::-webkit-scrollbar-track { background: transparent; }
+.console::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.console::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+.debug-function { color: var(--accent); }
+.error-message { color: var(--danger); }
+.timestamp { color: var(--muted); }
+
+/* Barre de progression (utilisée par esptool-js pendant le flash) */
+.progress-bar {
+  width: 100%;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--panel-2);
+}
+.progress-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #8fd6cb, var(--accent));
+  width: 0;
+  border-radius: 999px;
+  transition: width 0.3s ease;
 }
 
-.console::-webkit-scrollbar {
-  width: 10px;
-}
+/* =========================================================
+   Footer
+   ========================================================= */
 
-.console::-webkit-scrollbar-track {
-  background: #2d2d2d;
+.footer {
+  padding: 1.5rem 70px 2rem;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  text-align: center;
 }
+.footer a { color: var(--accent); }
 
-.console::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 5px;
-}
+/* =========================================================
+   Responsive
+   ========================================================= */
 
-.console::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
-
-/* Responsive pour petits écrans */
 @media (max-width: 768px) {
-  .content {
-    padding: 20px 20px;
+  .header, .subheader, .content, .footer, .notSupported {
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  
-  .firmware-selector,
-  .console-output {
-    padding: 20px;
-  }
-  
-  .program-section {
-    flex-direction: column;
-  }
-  
-  .program-section button {
-    max-width: 100%;
-  }
-  
-  #firmware-picker {
-    font-size: 14px;
-  }
-  }
+  .firmware-selector, .console-output { padding: 1.25rem; }
+  .program-section { flex-direction: column; }
+  .program-section button { max-width: 100%; }
+}
