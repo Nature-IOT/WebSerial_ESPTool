@@ -95,11 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // FIX: esploader.after("hard_reset") ne fait qu'un setRTS(false). Si RTS
-  // est déjà à false (c'est le cas juste après la connexion), cet appel ne
-  // produit aucune transition électrique sur la broche EN, donc aucun reset
-  // matériel réel sur les cartes à circuit auto-reset classique (RTS/DTR,
-  // ex: CP2102/CH340). On force ici une vraie impulsion RTS true -> false.
   async function hardResetClassic(transportInstance) {
     if (!transportInstance) return;
     await transportInstance.setRTS(true);
@@ -137,14 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
           console.error(error);
           isConnected = false;
           if (error.message.includes('esptool')) log('💡 Vérifiez votre connexion internet (CDN esptool-js)', 'warning');
-          else if (error.message.includes('Failed to open')) log('💡 Fermez Arduino IDE / PlatformIO / moniteurs série', 'warning');
+          else if (error.message.includes('Failed to open')) log('💡 Déconnectez le port série de la page de vision des données', 'warning');
         }
       } else {
         try {
           log('Déconnexion...');
           if (esploader) {
-            // FIX: after("hard_reset") ne suffit pas sur cette carte (voir
-            // hardResetClassic ci-dessus).
             await hardResetClassic(transport);
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
@@ -171,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 if (programButton) {
   programButton.addEventListener('click', async function() {
     if (!isConnected || !esploader) {
-      log('Erreur: Connectez-vous d\'abord à l\'ESP32', 'error');
+      log('Erreur: Connectez-vous d\'abord au capteur', 'error');
       return;
     }
     const selectedFirmware = firmwarePicker ? firmwarePicker.value : null;
@@ -195,14 +188,11 @@ if (programButton) {
         log(`[${i + 1}/${parts.length}] Préparation de ${part.path}...`);
         const data = await loadBinaryFile(part.path);
         if (!(data instanceof Uint8Array)) throw new Error(`Format de données invalide pour ${part.path}`);
-        // esptool-js >= 0.6.0 attend directement un Uint8Array dans
-        // fileArray[].data (changement d'API depuis la 0.5.x qui attendait
-        // une chaîne binaire). Ne pas convertir avec String.fromCharCode ici.
         fileArray.push({ data: data, address: part.offset });
       }
       log('Tous les fichiers sont chargés ✓', 'success');
       log('📝 Écriture de la flash...');
-      log('NE DÉBRANCHEZ PAS L\'ESP32 !', 'warning');
+      log('NE DÉBRANCHEZ PAS LE CAPTEUR !', 'warning');
       const flashOptions = {
         fileArray: fileArray,
         flashSize: "keep",
@@ -216,9 +206,6 @@ if (programButton) {
           log(`[${fileIndex + 1}/${parts.length}] ${fileName} - ${percent}%`, 'progress');
         },
         calculateMD5Hash: (image) => {
-          // esptool-js >= 0.6.0 : "image" est un Uint8Array, plus une chaîne
-          // binaire. On construit le WordArray CryptoJS directement depuis
-          // les octets plutôt que via enc.Latin1.parse (qui attend une string).
           const wordArray = CryptoJS.lib.WordArray.create(image);
           return CryptoJS.MD5(wordArray).toString();
         }
@@ -226,7 +213,6 @@ if (programButton) {
       await esploader.writeFlash(flashOptions);
       log('PROGRAMMATION TERMINÉE !', 'success');
       log('Reset du capteur...');
-      // Reset géré nativement par esptool-js
       try {
         await hardResetClassic(transport);
         log('Capteur redémarré avec le nouveau firmware', 'success');
